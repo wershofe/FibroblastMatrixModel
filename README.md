@@ -1,6 +1,7 @@
 # FibroblastMatrixModel
 
 Folder cellMatrixModel pertains to the paper Wershof et al. 2019.
+
 Folder cellCellModel pertains to the paper Park et al. 2019.
 
 Contact.cpp = Controls nature of collisions between fibroblasts
