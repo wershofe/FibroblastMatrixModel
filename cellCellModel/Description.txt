@@ -1,0 +1,13 @@
+Taken from (22-8-18_woundHealing(21-8-18 (8-8-18_woundAssay(4-6-18_startSwirls (23-5-18_LATEST ))
+
+18-9-18
+NB if want to look at wound area before wounding - just comment out stuff inside initialiseFibreBoxes, if(wounded==true)
+NB newMatrix - records zeros for everything outside wound area
+	allFibreBoxes - records all matrix
+$ If want to have a starting matrix can put IMT = "SwirlyMatrixOriginal.txt" etc.
+$ Removed all binary files
+The "OldMatrix" is for recording the full matrix details in the run prior to wounding - where original beforeWound matrix is generated.
+
+12-11-18
+Found a bug with proliferation
+Need a while loop rather than "if" and relate it to "dividing"

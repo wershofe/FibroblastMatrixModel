@@ -1,0 +1,24 @@
+length 1024
+trajectoryFileName _5-3-19
+maxFrame 101
+
+speedMean 4.1
+speedSD 0.06
+proliferation 0 
+radiusC 8
+aspectRatio 2
+overlapAllowance 0.75
+cis 0.25
+headSize 0.5
+
+CILtype A
+CILa 800
+CILb 160
+hetCILa 80
+hetCILb 160
+CILdataHB AligningHB.txt
+probCIL 0
+	
+rho 20
+polarity 0.05
+w2 0.0
