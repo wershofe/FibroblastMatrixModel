@@ -2,7 +2,7 @@ boxesToRecord 800
 fibreGridLength 128
 length 1024
 trajectoryFileName _5-3-19
-maxFrame 2101
+maxFrame 210
 
 sourceX 512
 sourceY 512

@@ -17,6 +17,7 @@
 #include <string>
 #include <ctime>
 #include <map>
+#include <random>
 #include "Node.h"
 #include "Parameter.h"
 #include "FibreBox.h"
@@ -73,14 +74,24 @@ int main(int argc, char* argv[])
 		//paramList.setRho(500); removed for now - put back in soon
 	}*/
 	a.readParameters(paramList);
-	string stringRand = static_cast<ostringstream*>( &(ostringstream() << seed) )->str();
+	// string stringRand = static_cast<ostringstream*>( &(ostringstream() << seed) )->str();
+	// cout << stringRand << endl;
+	// string stringPolarity = static_cast<ostringstream*>( &(ostringstream() << paramList.getPolarity()) )->str();
+	// string stringW2 = static_cast<ostringstream*>( &(ostringstream() << paramList.getW2()) )->str();
+	// string stringW5 = static_cast<ostringstream*>( &(ostringstream() << paramList.getW5()) )->str();
+	// string stringDepRate = static_cast<ostringstream*>( &(ostringstream() << paramList.getDepRate()) )->str();
+	// string stringReRate = static_cast<ostringstream*>( &(ostringstream() << paramList.getReRate()) )->str();
+	// string stringDegRate = static_cast<ostringstream*>( &(ostringstream() << paramList.getDegRate()) )->str();
+   
+    string stringRand = std::to_string(seed);
 	cout << stringRand << endl;
-	string stringPolarity = static_cast<ostringstream*>( &(ostringstream() << paramList.getPolarity()) )->str();
-	string stringW2 = static_cast<ostringstream*>( &(ostringstream() << paramList.getW2()) )->str();
-	string stringW5 = static_cast<ostringstream*>( &(ostringstream() << paramList.getW5()) )->str();
-	string stringDepRate = static_cast<ostringstream*>( &(ostringstream() << paramList.getDepRate()) )->str();
-	string stringReRate = static_cast<ostringstream*>( &(ostringstream() << paramList.getReRate()) )->str();
-	string stringDegRate = static_cast<ostringstream*>( &(ostringstream() << paramList.getDegRate()) )->str();
+    string stringPolarity = std::to_string(paramList.getPolarity());
+    string stringW2 = std::to_string(paramList.getW2());
+    string stringW5 = std::to_string(paramList.getW5());
+    string stringDepRate = std::to_string(paramList.getDepRate());
+    string stringReRate = std::to_string(paramList.getReRate());
+    string stringDegRate = std::to_string(paramList.getDegRate());
+    
 	string name = "File_" + paramList.getTrajectoryFileName() + "_" + stringRand + ".txt";
 	string nameGreyScale = name + "GreyScale.txt";
 	string nameOldMatrix = stringRand + "_OldMatrix.txt";
@@ -364,7 +375,7 @@ void plot(double chemoattr[][nblock], double t_now)
 {
     // -------------- write to a temp .dat file --------------
     ofstream ca_file;
-    string nameTime = static_cast<ostringstream*>( &(ostringstream() << t_now) )->str();
+    string nameTime = std::to_string(t_now);
     string nameCAT = "mCAT/mCAT_" + nameTime + ".txt"; 
     ca_file.open(nameCAT.c_str());
     for (int i = 0; i < nblock; i ++)
