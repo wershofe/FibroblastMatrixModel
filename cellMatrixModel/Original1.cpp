@@ -209,7 +209,8 @@ int main(int argc, char* argv[])
 			}			
 			
 			//if(frame%700==0)
-			if(frame==maxFrame-1)
+			//if(frame==maxFrame-1)
+            if(frame%100==0)
 			{
 				vector<FibreBox> fib = a.getFibreBoxes();
 				
