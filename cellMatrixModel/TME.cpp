@@ -17,6 +17,7 @@
 #include <sstream>
 #include <fstream>
 #include <omp.h>
+#include <random>
 
 using namespace std;
 
@@ -262,55 +263,62 @@ void TME::setBoxToVoxFibs() // rewrites map between voxBox number and all the fi
 	}	
 }
 
+
 void TME::addFibroblast(int &timeD)
 {
-	
-	int dividing = rhoD * pow (2, timeD/proliferationD);
-	while(proliferationD && (fibroblasts.size()<dividing) && (fibroblasts.size() < 3000)) // currently when this number of fibroblasts, stops proliferating - ie maximum density
-	{ 
-		vector<int> freeBoxes;
-		for(int i=0; i!= numberVoxBoxD*numberVoxBoxD; i++)
-		{
-			if(boxToFibs[i].size()==0)
-			{
-				freeBoxes.push_back(i);
-			}
-		}
-		if(freeBoxes.size() !=0)
-		{
-			random_shuffle(freeBoxes.begin(),freeBoxes.end());
-			for(int i=0; i!= freeBoxes.size(); i++)
-			{
-				int k=freeBoxes[i];
-				if(boxToVoxFibs[k].size()!=0)
-				{
-					vector<int> pickFib;
-					for(int j=0; j!=boxToVoxFibs[k].size(); j++)
-					{
-						pickFib.push_back(j);
-					}
-					random_shuffle(pickFib.begin(),pickFib.end());
-					double theta = boxToVoxFibs[k][pickFib[0]].getTheta();
-					int y = floor(k/numberVoxBoxD);
-					int x = k - (numberVoxBoxD*y);
-					double sizeOfFreeBox = lengthD/numberVoxBoxD;
-					double rand01 = ((double) rand() / (RAND_MAX))*sizeOfFreeBox; //place new fibroblast randomly in that box
-					double rand02 = ((double) rand() / (RAND_MAX))*sizeOfFreeBox;
-					double yCoord = (y * sizeOfFreeBox) + rand01;
-					double xCoord = (x * sizeOfFreeBox) + rand02;	
-		
-					Fibroblast c(radiusCD, speedMeanD, speedSDD);
-					c.setFirstPosition(xCoord, yCoord, theta+M_PI, radiusCD, aspectRatioD);
-					c.setNumber(fibroblasts.size()); // since we haven't yet pushed this fibroblast onto the fibroblasts vector
-					c.findCorrespondingBox(fibreGridLengthD, lengthD); // set to find corresponding ECM box
-					c.findVoxBox(numberVoxBoxD, lengthD); // set to find corresponding ECM voxBox
-					fibroblasts.push_back(c);
-					break;
-				}
-			}
-		}
-	}
+    int dividing = rhoD * pow(2, timeD / proliferationD);
+    while (proliferationD && (fibroblasts.size() < dividing) && (fibroblasts.size() < 3000)) // maximum density
+    { 
+        std::vector<int> freeBoxes;
+        for (int i = 0; i != numberVoxBoxD * numberVoxBoxD; i++)
+        {
+            if (boxToFibs[i].empty())
+            {
+                freeBoxes.push_back(i);
+            }
+        }
+        
+        if (!freeBoxes.empty())
+        {
+            // Use std::shuffle with a random device generator
+            std::random_device rd;
+            std::mt19937 g(rd());
+            std::shuffle(freeBoxes.begin(), freeBoxes.end(), g);
+
+            for (int i : freeBoxes)
+            {
+                int k = i;
+                if (!boxToVoxFibs[k].empty())
+                {
+                    std::vector<int> pickFib;
+                    for (int j = 0; j != boxToVoxFibs[k].size(); j++)
+                    {
+                        pickFib.push_back(j);
+                    }
+                    std::shuffle(pickFib.begin(), pickFib.end(), g);
+
+                    double theta = boxToVoxFibs[k][pickFib[0]].getTheta();
+                    int y = floor(k / numberVoxBoxD);
+                    int x = k - (numberVoxBoxD * y);
+                    double sizeOfFreeBox = lengthD / numberVoxBoxD;
+                    double rand01 = ((double)rand() / RAND_MAX) * sizeOfFreeBox; // place new fibroblast randomly in that box
+                    double rand02 = ((double)rand() / RAND_MAX) * sizeOfFreeBox;
+                    double yCoord = (y * sizeOfFreeBox) + rand01;
+                    double xCoord = (x * sizeOfFreeBox) + rand02;    
+
+                    Fibroblast c(radiusCD, speedMeanD, speedSDD);
+                    c.setFirstPosition(xCoord, yCoord, theta + M_PI, radiusCD, aspectRatioD);
+                    c.setNumber(fibroblasts.size()); // since we haven't yet pushed this fibroblast onto the fibroblasts vector
+                    c.findCorrespondingBox(fibreGridLengthD, lengthD); // set to find corresponding ECM box
+                    c.findVoxBox(numberVoxBoxD, lengthD); // set to find corresponding ECM voxBox
+                    fibroblasts.push_back(c);
+                    break;
+                }
+            }
+        }
+    }
 }
+
 void TME::computeAdjacentBoxes(int boxD) // want to know all fibroblasts in a voxel box and adjacent boxes - only those fibroblasts can be touching
 {
 	int x = boxD% numberVoxBoxD; // work out what the x and y markers are for that box index
@@ -1374,16 +1382,19 @@ std::vector<FibreBox> TME::getQuantBoxes()
 	}
 
 	// shuffle each vector<FibreBox>
-	for(int i=0; i<=max; i++)
-	{
-		vector<FibreBox> f = densityMap[i];
-		int entries = densityMap[i].size();
-		if(entries>1) // only shuffle boxes for a given density if there is more than one box to shuffle
-		{
-			random_shuffle(f.begin(), f.end());
-		}
-		densityMap[i] = f;
-	}
+	for (int i = 0; i <= max; i++)
+{
+    std::vector<FibreBox> f = densityMap[i];
+    int entries = f.size();
+    if (entries > 1) // Only shuffle boxes if there is more than one box to shuffle
+    {
+        // Set up the random number generator
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(f.begin(), f.end(), g);
+    }
+    densityMap[i] = f;
+}
 	
 	//concatenate
 	vector<FibreBox> fConcatenated;
@@ -1486,7 +1497,7 @@ void TME::readParameters(Parameter p)
 void TME::readMatrix( int timeD)
 {
 	Mij.clear();
-	string timeAsString = static_cast<ostringstream*>( &(ostringstream() << timeD) )->str();
+    string timeAsString = std::to_string(timeD);
 	string fileName = "mCAT/mCAT_" + timeAsString + ".txt";
 	ifstream matrixFile(fileName.c_str());
 	string valueIJ;
