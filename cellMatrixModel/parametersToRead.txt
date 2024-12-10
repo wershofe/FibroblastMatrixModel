@@ -2,7 +2,7 @@ boxesToRecord 800
 fibreGridLength 128
 length 1024
 trajectoryFileName _5-3-19
-maxFrame 210
+maxFrame 301
 
 sourceX 512
 sourceY 512
@@ -16,16 +16,16 @@ radiusC 8
 radiusCC 12
 aspectRatio 2
 
-polarity 0.05
+polarity 0.4
 w2 0.0
 w3 0.0
 w4 0.0
-w5 0.4
+w5 0.0
 
-depRate 2
+depRate 8
 reRate 0
 degRate 0
-IMT N
+IMT NonAligningMatrixOriginal.txt
 IMI 0
 
 CILtype A
